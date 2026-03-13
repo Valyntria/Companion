@@ -46,8 +46,8 @@ def save_message(role, content):
     supabase.table("memories").insert({"role": role, "content": content}).execute()
 
 # --- UI ---
-st.set_page_config(page_title="My AI Companion", page_icon="🤍")
-st.title("🤍 Your AI Companion")
+st.set_page_config(page_title="Ella", page_icon="🤍")
+st.title("Ella 🤍")
 
 # Load full history once per session
 if "messages" not in st.session_state:
