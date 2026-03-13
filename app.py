@@ -52,7 +52,6 @@ def check_password():
 check_password()
 
 # --- Session Timeout ---
-import time
 if "last_active" not in st.session_state:
     st.session_state.last_active = time.time()
 if time.time() - st.session_state.last_active > 1800:
