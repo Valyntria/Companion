@@ -111,8 +111,6 @@ html, body, .stApp { background: #0a0a0f !important; color: #e8e0d5 !important; 
 [data-testid="stChatInput"] textarea:focus { border-bottom-color: #c9a96e !important; box-shadow: none !important; }
 [data-testid="stChatInput"] textarea::placeholder { color: #2a2820 !important; font-style: italic !important; }
 [data-testid="stChatInput"] button { background: transparent !important; border: none !important; color: #c9a96e !important; }
-.voice-bar { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 760px; background: #0a0a0f; border-top: 1px solid #1a1815; padding: 0.75rem 2rem; display: flex; align-items: center; gap: 1rem; z-index: 999; }
-.voice-label { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: #3a3530; white-space: nowrap; }
 div[data-testid="stAudioInput"] { margin: 0 !important; }
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -135,9 +133,7 @@ for message in st.session_state.messages:
         st.write(message["content"])
 
 # --- Voice input bar ---
-st.markdown('<div class="voice-bar"><span class="voice-label">🎙 Speak</span>', unsafe_allow_html=True)
 audio = st.audio_input(" ", label_visibility="collapsed")
-st.markdown('</div>', unsafe_allow_html=True)
 
 # --- Handle voice input ---
 if audio is not None:
