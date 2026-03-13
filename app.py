@@ -27,7 +27,7 @@ def check_password():
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.8rem;
             font-weight: 300;
-            font-style: italic;
+            font-style: normal;
             color: #c9a96e;
             letter-spacing: 0.05em;
             text-align: center;
@@ -156,7 +156,7 @@ html, body, .stApp {
     font-family: 'Cormorant Garamond', serif !important;
     font-size: 2.2rem;
     font-weight: 300;
-    font-style: italic;
+    font-style: normal;
     color: #c9a96e;
     letter-spacing: 0.05em;
     margin: 0;
@@ -192,7 +192,7 @@ html, body, .stApp {
     font-weight: 300 !important;
     font-size: 0.95rem !important;
     line-height: 1.85 !important;
-    font-style: italic;
+    font-style: normal;
 }
 
 /* Avatar icons */
@@ -243,7 +243,7 @@ html, body, .stApp {
 }
 [data-testid="stChatInput"] textarea::placeholder {
     color: #2a2820 !important;
-    font-style: italic !important;
+    font-style: normal !important;
 }
 
 /* Send button */
