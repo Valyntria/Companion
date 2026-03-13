@@ -196,16 +196,3 @@ if prompt := st.chat_input("Or type here..."):
 
     with st.chat_message("assistant"):
         st.write(reply)
-
-    with st.spinner(""):
-        try:
-            audio_response = speak(reply)
-            if audio_response:
-                audio_b64 = base64.b64encode(audio_response).decode("utf-8")
-                st.markdown(f"""
-                    <audio autoplay style="display:none">
-                        <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
-                    </audio>
-                """, unsafe_allow_html=True)
-        except Exception as e:
-            st.error(f"Voice error: {e}")
