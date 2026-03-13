@@ -27,7 +27,6 @@ def check_password():
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.8rem;
             font-weight: 300;
-            font-weight: bold;
             font-style: normal;
             color: #c9a96e;
             letter-spacing: 0.05em;
@@ -157,6 +156,7 @@ html, body, .stApp {
     font-family: 'Cormorant Garamond', serif !important;
     font-size: 2.2rem;
     font-weight: 300;
+    font-weight: bold;
     font-style: normal;
     color: #c9a96e;
     letter-spacing: 0.05em;
