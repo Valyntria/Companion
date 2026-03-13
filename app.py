@@ -9,6 +9,13 @@ import base64
 def check_password():
     if "authenticated" not in st.session_state:
         st.session_state.authenticated = False
+    if "failed_attempts" not in st.session_state:
+        st.session_state.failed_attempts = 0
+
+    if st.session_state.failed_attempts >= 5:
+        st.error("Too many failed attempts. Please refresh the page.")
+        st.stop()
+
     if not st.session_state.authenticated:
         st.markdown("""
         <style>
@@ -37,10 +44,20 @@ def check_password():
                     st.session_state.authenticated = True
                     st.rerun()
                 else:
-                    st.error("Incorrect passphrase.")
+                    st.session_state.failed_attempts += 1
+                    remaining = 5 - st.session_state.failed_attempts
+                    st.error(f"Incorrect passphrase. {remaining} attempts remaining.")
         st.stop()
-
 check_password()
+
+# --- Session Timeout ---
+import time
+if "last_active" not in st.session_state:
+    st.session_state.last_active = time.time()
+if time.time() - st.session_state.last_active > 1800:
+    st.session_state.authenticated = False
+    st.rerun()
+st.session_state.last_active = time.time()
 
 # --- Clients ---
 anthropic_client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])
