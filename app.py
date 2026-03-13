@@ -261,7 +261,6 @@ html, body, .stApp {
 
 <div class="app-header">
     <div class="app-title">Ella 🤍</div>
-    <div class="app-subtitle">🤍</div>
 </div>
 """, unsafe_allow_html=True)
 
