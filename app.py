@@ -111,7 +111,8 @@ html, body, .stApp { background: #0a0a0f !important; color: #e8e0d5 !important; 
 [data-testid="stChatInput"] textarea:focus { border-bottom-color: #c9a96e !important; box-shadow: none !important; }
 [data-testid="stChatInput"] textarea::placeholder { color: #2a2820 !important; font-style: italic !important; }
 [data-testid="stChatInput"] button { background: transparent !important; border: none !important; color: #c9a96e !important; }
-div[data-testid="stAudioInput"] { margin: 0 !important; }
+div[data-testid="stAudioInput"] { margin: 0 !important; width: 100% !important; }
+div[data-testid="stAudioInput"] > div { width: 100% !important; min-height: 55px !important; border-radius: 8px !important; }
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #2a2820; border-radius: 2px; }
