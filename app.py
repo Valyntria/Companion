@@ -75,7 +75,7 @@ def transcribe_audio(audio_bytes):
 def speak(text):
     response = openai_client.audio.speech.create(
         model="tts-1",
-        voice="marin",
+        voice="shimmer",
         input=text
     )
     return response.content
