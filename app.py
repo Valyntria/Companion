@@ -4,6 +4,7 @@ from supabase import create_client
 import openai
 import requests
 import io
+import base64
 
 # --- Auth ---
 def check_password():
@@ -170,7 +171,13 @@ if audio is not None:
 
             with st.spinner(""):
                 audio_response = speak(reply)
-            st.audio(audio_response, format="audio/mp3", autoplay=True)
+            import base64
+audio_b64 = base64.b64encode(audio_response).decode("utf-8")
+st.markdown(f"""
+    <audio autoplay style="display:none">
+        <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
+    </audio>
+""", unsafe_allow_html=True)
 
 # --- Handle text input ---
 if prompt := st.chat_input("Or type here..."):
@@ -195,4 +202,10 @@ if prompt := st.chat_input("Or type here..."):
 
     with st.spinner(""):
         audio_response = speak(reply)
-    st.audio(audio_response, format="audio/mp3", autoplay=True)
+    import base64
+audio_b64 = base64.b64encode(audio_response).decode("utf-8")
+st.markdown(f"""
+    <audio autoplay style="display:none">
+        <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
+    </audio>
+""", unsafe_allow_html=True)
