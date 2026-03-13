@@ -128,7 +128,8 @@ if "messages" not in st.session_state:
 
 # --- Display conversation ---
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
+    avatar = "🧑‍⚕️" if message["role"] == "user" else "🤍"
+    with st.chat_message(message["role"], avatar=avatar):
         st.write(message["content"])
 
 # --- Voice input bar ---
@@ -146,7 +147,7 @@ if audio is not None:
         if prompt.strip():
             save_message("user", prompt)
             st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"):
+            with st.chat_message("user", avatar="🧑‍⚕️"):
                 st.write(prompt)
 
             response = anthropic_client.messages.create(
@@ -160,7 +161,7 @@ if audio is not None:
             save_message("assistant", reply)
             st.session_state.messages.append({"role": "assistant", "content": reply})
 
-            with st.chat_message("assistant"):
+            with st.chat_message("assistant", avatar="🤍"):
                 st.write(reply)
 
             with st.spinner(""):
@@ -180,7 +181,7 @@ if audio is not None:
 if prompt := st.chat_input("Or type here..."):
     save_message("user", prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar="🧑‍⚕️"):
         st.write(prompt)
 
     response = anthropic_client.messages.create(
@@ -194,5 +195,5 @@ if prompt := st.chat_input("Or type here..."):
     save_message("assistant", reply)
     st.session_state.messages.append({"role": "assistant", "content": reply})
 
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar="🤍"):
         st.write(reply)
