@@ -80,7 +80,7 @@ def speak(text):
     }
     data = {
         "text": text,
-        "model_id": "eleven_turbo_v2_5",
+        "model_id": "eleven_turbo_v2",
         "voice_settings": {"stability": 0.55, "similarity_boost": 0.75}
     }
     response = requests.post(url, headers=headers, json=data)
