@@ -3,3 +3,4 @@ streamlit
 supabase
 openai
 requests
+base64
