@@ -3,8 +3,8 @@ import streamlit as st
 from supabase import create_client
 import openai
 import io
-import base64
 import time
+import base64
 
 # --- Auth ---
 def check_password():
