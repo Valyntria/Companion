@@ -73,20 +73,11 @@ def transcribe_audio(audio_bytes):
     return transcript.text
 
 def speak(text):
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{st.secrets['ELEVENLABS_VOICE_ID']}"
-    headers = {
-        "xi-api-key": st.secrets["ELEVENLABS_API_KEY"],
-        "Content-Type": "application/json"
-    }
-    data = {
-        "text": text,
-        "model_id": "eleven_turbo_v2",
-        "voice_settings": {"stability": 0.55, "similarity_boost": 0.75}
-    }
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code != 200:
-        st.error(f"ElevenLabs error {response.status_code}: {response.text}")
-        return None
+    response = openai_client.audio.speech.create(
+        model="tts-1",
+        voice="marin",
+        input=text
+    )
     return response.content
 
 # --- Memory ---
