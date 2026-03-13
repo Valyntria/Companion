@@ -116,6 +116,9 @@ div[data-testid="stAudioInput"] > div { width: 100% !important; min-height: 55px
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #2a2820; border-radius: 2px; }
+div[data-testid="stBottom"] { background: transparent !important; border: none !important; box-shadow: none !important; outline: none !important; }
+div[data-testid="stBottom"] > div { background: transparent !important; border: none !important; box-shadow: none !important; outline: none !important; }
+</style>
 </style>
 
 <div class="app-header">
