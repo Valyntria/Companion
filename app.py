@@ -4,6 +4,7 @@ from supabase import create_client
 import openai
 import io
 import base64
+import time
 
 # --- Auth ---
 def check_password():
