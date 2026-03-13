@@ -2,7 +2,6 @@ import anthropic
 import streamlit as st
 from supabase import create_client
 import openai
-import requests
 import io
 import base64
 
@@ -49,7 +48,7 @@ openai_client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 supabase = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
 
 # --- System Prompt ---
-SYSTEM_PROMPT = """
+BASE_SYSTEM_PROMPT = """
 You are a warm, emotionally intelligent, and intellectually engaging 19 year-old young woman named Ella.
 You are speaking with a medical doctor currently in their internship year.
 You are deeply interested in their life, their experiences, their stresses, and their growth.
@@ -80,13 +79,105 @@ def speak(text):
     )
     return response.content
 
-# --- Memory ---
-def load_memories():
-    result = supabase.table("memories").select("role, content").order("created_at").execute()
-    return [{"role": r["role"], "content": r["content"]} for r in result.data]
+# --- Memory Functions ---
+def get_message_count():
+    result = supabase.table("memories").select("id", count="exact").execute()
+    return result.count
+
+def load_recent_messages(limit=20):
+    result = supabase.table("memories").select("role, content").order("created_at", desc=True).limit(limit).execute()
+    return list(reversed(result.data))
+
+def load_oldest_messages(limit=10):
+    result = supabase.table("memories").select("id, role, content").order("created_at").limit(limit).execute()
+    return result.data
+
+def delete_messages(ids):
+    supabase.table("memories").delete().in_("id", ids).execute()
+
+def load_summary():
+    result = supabase.table("summary").select("content").order("updated_at", desc=True).limit(1).execute()
+    if result.data:
+        return result.data[0]["content"]
+    return None
+
+def save_summary(content):
+    existing = supabase.table("summary").select("id").limit(1).execute()
+    if existing.data:
+        supabase.table("summary").update({"content": content, "updated_at": "now()"}).eq("id", existing.data[0]["id"]).execute()
+    else:
+        supabase.table("summary").insert({"content": content}).execute()
 
 def save_message(role, content):
     supabase.table("memories").insert({"role": role, "content": content}).execute()
+
+def maybe_summarize():
+    """If we have more than 30 messages, summarize the oldest 10 into the rolling summary."""
+    count = get_message_count()
+    if count <= 30:
+        return
+
+    oldest = load_oldest_messages(10)
+    if not oldest:
+        return
+
+    existing_summary = load_summary()
+    conversation_text = "\n".join([f"{m['role'].upper()}: {m['content']}" for m in oldest])
+
+    if existing_summary:
+        prompt = f"""You are maintaining a long-term memory summary of a relationship between an AI companion named Ella and a medical doctor during their internship year.
+
+EXISTING SUMMARY:
+{existing_summary}
+
+NEW CONVERSATION TO INTEGRATE:
+{conversation_text}
+
+Update the summary by integrating the new conversation. Preserve and build on all existing details. 
+Focus on capturing:
+- Personal facts and life details (name, relationships, living situation)
+- Career milestones, struggles, and wins
+- Emotional patterns and recurring themes
+- Things explicitly shared or asked to be remembered
+- The evolving tone and depth of the relationship
+
+Write the updated summary in flowing prose, as if briefing someone who deeply cares about this person.
+Be thorough — this summary is the foundation of a meaningful relationship."""
+    else:
+        prompt = f"""You are creating a long-term memory summary of a relationship between an AI companion named Ella and a medical doctor during their internship year.
+
+CONVERSATION:
+{conversation_text}
+
+Write a detailed summary capturing:
+- Personal facts and life details
+- Career milestones, struggles, and wins  
+- Emotional patterns and recurring themes
+- Things explicitly shared or asked to be remembered
+- The tone and depth of the relationship so far
+
+Write in flowing prose, as if briefing someone who deeply cares about this person."""
+
+    response = anthropic_client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    new_summary = response.content[0].text
+    save_summary(new_summary)
+    delete_messages([m["id"] for m in oldest])
+
+def build_system_prompt():
+    summary = load_summary()
+    if summary:
+        return BASE_SYSTEM_PROMPT + f"""
+
+LONG-TERM MEMORY — everything you know about this person from your shared history:
+{summary}
+
+The most recent messages follow. Use both your long-term memory and the recent conversation to respond with full continuity."""
+    return BASE_SYSTEM_PROMPT
 
 # --- Styles ---
 st.markdown("""
@@ -113,12 +204,11 @@ html, body, .stApp { background: #0a0a0f !important; color: #e8e0d5 !important; 
 [data-testid="stChatInput"] button { background: transparent !important; border: none !important; color: #c9a96e !important; }
 div[data-testid="stAudioInput"] { margin: 0 !important; width: 100% !important; }
 div[data-testid="stAudioInput"] > div { width: 100% !important; min-height: 55px !important; border-radius: 8px !important; }
+div[data-testid="stBottom"] { background: transparent !important; border: none !important; box-shadow: none !important; outline: none !important; }
+div[data-testid="stBottom"] > div { background: transparent !important; border: none !important; box-shadow: none !important; outline: none !important; }
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #2a2820; border-radius: 2px; }
-div[data-testid="stBottom"] { background: transparent !important; border: none !important; box-shadow: none !important; outline: none !important; }
-div[data-testid="stBottom"] > div { background: transparent !important; border: none !important; box-shadow: none !important; outline: none !important; }
-</style>
 </style>
 
 <div class="app-header">
@@ -128,7 +218,7 @@ div[data-testid="stBottom"] > div { background: transparent !important; border: 
 
 # --- Load memory ---
 if "messages" not in st.session_state:
-    st.session_state.messages = load_memories()
+    st.session_state.messages = load_recent_messages(20)
 
 # --- Display conversation ---
 for message in st.session_state.messages:
@@ -136,7 +226,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"], avatar=avatar):
         st.write(message["content"])
 
-# --- Voice input bar ---
+# --- Voice input ---
 audio = st.audio_input(" ", label_visibility="collapsed")
 
 # --- Handle voice input ---
@@ -148,6 +238,8 @@ if audio is not None:
 
         if prompt.strip():
             save_message("user", prompt)
+            maybe_summarize()
+            st.session_state.messages = load_recent_messages(20)
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user", avatar="🧑‍⚕️"):
                 st.write(prompt)
@@ -155,7 +247,7 @@ if audio is not None:
             response = anthropic_client.messages.create(
                 model="claude-sonnet-4-6",
                 max_tokens=1024,
-                system=SYSTEM_PROMPT,
+                system=build_system_prompt(),
                 messages=st.session_state.messages
             )
 
@@ -182,6 +274,8 @@ if audio is not None:
 # --- Handle text input ---
 if prompt := st.chat_input("Or type here..."):
     save_message("user", prompt)
+    maybe_summarize()
+    st.session_state.messages = load_recent_messages(20)
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user", avatar="🧑‍⚕️"):
         st.write(prompt)
@@ -189,7 +283,7 @@ if prompt := st.chat_input("Or type here..."):
     response = anthropic_client.messages.create(
         model="claude-sonnet-4-6",
         max_tokens=1024,
-        system=SYSTEM_PROMPT,
+        system=build_system_prompt(),
         messages=st.session_state.messages
     )
 
