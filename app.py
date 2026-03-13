@@ -84,6 +84,9 @@ def speak(text):
         "voice_settings": {"stability": 0.55, "similarity_boost": 0.75}
     }
     response = requests.post(url, headers=headers, json=data)
+    if response.status_code != 200:
+        st.error(f"ElevenLabs error {response.status_code}: {response.text}")
+        return None
     return response.content
 
 # --- Memory ---
@@ -171,13 +174,13 @@ if audio is not None:
 
             with st.spinner(""):
                 audio_response = speak(reply)
-            import base64
-audio_b64 = base64.b64encode(audio_response).decode("utf-8")
-st.markdown(f"""
-    <audio autoplay style="display:none">
-        <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
-    </audio>
-""", unsafe_allow_html=True)
+if audio_response:
+    audio_b64 = base64.b64encode(audio_response).decode("utf-8")
+    st.markdown(f"""
+        <audio autoplay style="display:none">
+            <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
+        </audio>
+    """, unsafe_allow_html=True)
 
 # --- Handle text input ---
 if prompt := st.chat_input("Or type here..."):
@@ -202,10 +205,10 @@ if prompt := st.chat_input("Or type here..."):
 
     with st.spinner(""):
         audio_response = speak(reply)
-    import base64
-audio_b64 = base64.b64encode(audio_response).decode("utf-8")
-st.markdown(f"""
-    <audio autoplay style="display:none">
-        <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
-    </audio>
-""", unsafe_allow_html=True)
+if audio_response:
+    audio_b64 = base64.b64encode(audio_response).decode("utf-8")
+    st.markdown(f"""
+        <audio autoplay style="display:none">
+            <source src="data:audio/mp3;base64,{audio_b64}" type="audio/mp3">
+        </audio>
+    """, unsafe_allow_html=True)
