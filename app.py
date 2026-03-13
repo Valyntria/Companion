@@ -208,8 +208,8 @@ html, body, .stApp { background: #0a0a0f !important; color: #e8e0d5 !important; 
 .app-title { font-family: 'Cormorant Garamond', serif !important; font-size: 2.2rem; font-weight: 700; font-style: normal; color: #c9a96e; letter-spacing: 0.05em; margin: 0; }
 .app-subtitle { font-size: 0.65rem; font-weight: 200; letter-spacing: 0.35em; text-transform: uppercase; color: #3a3530; margin-top: 0.4rem; }
 [data-testid="stChatMessage"] { background: transparent !important; border: none !important; padding: 1.2rem 0 !important; border-bottom: 1px solid #13120f !important; }
-[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) .stMarkdown p { color: #c9b99a !important; font-weight: 300 !important; font-size: 0.95rem !important; line-height: 1.75 !important; }
-[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) .stMarkdown p { color: #c9b99a !important; font-weight: 300 !important; font-size: 0.95rem !important; line-height: 1.85 !important; font-style: italic; }
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) .stMarkdown p { color: #ffffff !important; font-weight: 300 !important; font-size: 0.95rem !important; line-height: 1.75 !important; }
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) .stMarkdown p { color: #ffffff !important; font-weight: 300 !important; font-size: 0.95rem !important; line-height: 1.85 !important; font-style: italic; }
 [data-testid="chatAvatarIcon-user"] { background: #1e1c18 !important; color: #c9a96e !important; border: 1px solid #2a2820 !important; }
 [data-testid="chatAvatarIcon-assistant"] { background: #0f0e0c !important; color: #5a5248 !important; border: 1px solid #1a1815 !important; }
 [data-testid="stChatInput"] { background: #0f0e0b !important; border: none !important; border-top: 1px solid #1e1c18 !important; padding: 1rem 2rem !important; position: fixed !important; bottom: 0 !important; left: 50% !important; transform: translateX(-50%) !important; width: 100% !important; max-width: 760px !important; }
