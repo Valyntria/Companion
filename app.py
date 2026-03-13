@@ -16,7 +16,7 @@ def check_password():
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@200;300;400&display=swap');
         * { font-family: 'Jost', sans-serif; }
         html, body, .stApp { background: #0a0a0f; color: #e8e0d5; }
-        .lock-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; gap: 2rem; }
+        .lock-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 30vh; gap: 2rem; }
         .lock-title { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 300; font-style: italic; color: #c9a96e; letter-spacing: 0.05em; text-align: center; }
         .lock-sub { font-size: 0.75rem; font-weight: 200; letter-spacing: 0.3em; text-transform: uppercase; color: #6b6560; text-align: center; }
         div[data-testid="stTextInput"] input { background: transparent !important; border: none !important; border-bottom: 1px solid #3a3530 !important; border-radius: 0 !important; color: #e8e0d5 !important; text-align: center !important; font-family: 'Jost', sans-serif !important; font-weight: 200 !important; letter-spacing: 0.2em !important; padding: 0.75rem 0 !important; box-shadow: none !important; }
@@ -31,7 +31,7 @@ def check_password():
         </div>
         """, unsafe_allow_html=True)
         password = st.text_input("Passphrase", type="password")
-        col1, col2, col3 = st.columns([2, 1, 2])
+        col1, col2, col3 = st.columns([1.5, 2, 1.5])
         with col2:
             if st.button("Enter"):
                 if password == st.secrets["APP_PASSWORD"]:
