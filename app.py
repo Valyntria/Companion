@@ -54,7 +54,7 @@ check_password()
 # --- Session Timeout ---
 if "last_active" not in st.session_state:
     st.session_state.last_active = time.time()
-if time.time() - st.session_state.last_active > 1800:
+if time.time() - st.session_state.last_active > 600:
     st.session_state.authenticated = False
     st.rerun()
 st.session_state.last_active = time.time()
