@@ -2,4 +2,3 @@ anthropic
 streamlit
 supabase
 openai
-requests
