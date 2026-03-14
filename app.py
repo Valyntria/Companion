@@ -198,6 +198,7 @@ The most recent messages follow. Use both your long-term memory and the recent c
 
 # --- Styles ---
 st.markdown("""
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@200;300;400&display=swap');
 * { font-family: 'Jost', sans-serif !important; }
