@@ -58,7 +58,6 @@ if time.time() - st.session_state.last_active > 600:
 st.session_state.last_active = time.time()
 
 # --- Clients ---
-# Initializing OpenAI Client routed explicitly through OpenRouter API endpoint
 openai_client = openai.OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=st.secrets["OPENROUTER_API_KEY"]
