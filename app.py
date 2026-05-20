@@ -58,9 +58,9 @@ if time.time() - st.session_state.last_active > 600:
 st.session_state.last_active = time.time()
 
 # --- Clients ---
+# Initializing native OpenAI Client
 openai_client = openai.OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=st.secrets["OPENROUTER_API_KEY"]
+    api_key=st.secrets["OPENAI_API_KEY"]
 )
 supabase = create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
 
@@ -190,15 +190,10 @@ Write a detailed summary capturing:
 
 Write in flowing prose, as if briefing someone who deeply cares about this person."""
 
+    # Using GPT-4o for the background summarization
     response = openai_client.chat.completions.create(
-        model="meta-llama/llama-4-maverick",
-        messages=[{"role": "user", "content": prompt}],
-        extra_body={
-            "provider": {
-                "order": ["DeepInfra"],
-                "allow_fallbacks": False
-            }
-        }
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}]
     )
     new_summary = response.choices[0].message.content
     save_summary(new_summary)
@@ -277,15 +272,10 @@ if prompt := st.chat_input("Or type here..."):
     with st.chat_message("user", avatar="🧑‍⚕️"):
         st.write(prompt)
         
+    # Using GPT-4o for the main conversation
     response = openai_client.chat.completions.create(
-        model="meta-llama/llama-4-maverick",
-        messages=formatted_messages,
-        extra_body={
-            "provider": {
-                "order": ["DeepInfra"],
-                "allow_fallbacks": False
-            }
-        }
+        model="gpt-4o",
+        messages=formatted_messages
     )
     reply = response.choices[0].message.content
     save_message("assistant", reply)
